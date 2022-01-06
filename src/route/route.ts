@@ -19,7 +19,7 @@ async function route(val:any):Promise<any>{
     let {url,method} = val
     switch (url){
         case '/' :
-            return await getFile('./web/dist/index.html').then(res=>{
+            return await getFile('./dist/index.html').then(res=>{
                 return res
             })
         case '/get': {

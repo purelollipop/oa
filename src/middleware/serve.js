@@ -16,7 +16,7 @@ function serve(route){
         resolve.setHeader("Access-Control-Allow-Headers","Content-Type, X-Requested-With, Cache-Control,Authorization");
         let pathName = req.url
         console.log(pathName)
-        if(pathName.indexOf('api') === 0){
+        if(pathName.indexOf('/api') === 0){
             resolve.writeHead(200, {'Content-Type': 'application/json'});
             route(req).then(res=>{
                 resolve.end(JSON.stringify(res))
@@ -31,7 +31,7 @@ function serve(route){
                 let d = path.extname(pathName)
                 d = mime.lookup(d)
                 resolve.writeHead(200, {'Content-Type': d});
-                let b = fs.readFileSync(`./web/dist${pathName}`)
+                let b = fs.readFileSync(`./dist${pathName}`)
                 resolve.end(b)
             }
         }

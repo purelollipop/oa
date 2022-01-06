@@ -4,7 +4,8 @@ let connection = require('./src/sql/sql_line')
 let fs =  require('fs')
 import { readdir } from 'fs/promises';
 
-fs.readFile('dist',(err,data)=>{
+fs.readdir('./dist',(err,data)=>{
+    console.log(err)
     try {
         if( err ) {
             throw err
@@ -14,11 +15,24 @@ fs.readFile('dist',(err,data)=>{
     } catch (err){
         // fs.writeFile()
         async function readFil(){
-            let a = await readdir('web/dist')
-            console.log(a)
-            return a
+            return new Promise((res,req)=>{
+                res(readdir('web/dist'))
+            })
         }
-        readFil()
+        readFil().then(res=>{
+            fs.mkdir('./dist',(err)=>{
+                console.log(err)
+            })
+            for (let i = 0; i < res.length; i++) {
+                let read = fs.createReadStream(`web/dist/${res[i]}`)
+                let write = fs.createWriteStream(`./dist/${res[i]}`)
+                read.pipe(write)
+            }
+            let read = fs.createReadStream(`web/assets/favicon.ico`)
+            let write = fs.createWriteStream(`./dist/favicon.ico`)
+            read.pipe(write)
+            serve.serve(route.route)
+        })
     }
 })
 
