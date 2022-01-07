@@ -8,7 +8,9 @@ let path =  require('path')
 var mime = require('mime-types')
 // let url =  require('url')
 import url,{ URL }  from 'url';
+let getObj = require('./src/api/get/get_api.ts')
 function serve(route){
+    // console.log(getObj)
     function onRequest(req,resolve){
         resolve.setHeader("Access-Control-Allow-Origin", "*");
         resolve.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
