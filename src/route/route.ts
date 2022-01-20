@@ -15,34 +15,30 @@ async function getFile(urlStr:string){
 }
 async function route(val:any):Promise<any>{
     let {url,method} = val
-    switch (url){
-        case '/' :
-            return await getFile('./dist/index.html').then(res=>{
-                return res
-            })
-        case '/get': {
+    if(url === '/'){
+        return await getFile('./dist/index.html').then(res=>{
+            return res
+        })
+    }
+    console.log(method)
+    switch (method){
+        case 'get': {
             let sqlStr = 'SELECT * FROM ONE'
             return await findFun(sqlStr).then(res=>{
                 return(res)
             })
         }
-        case '/post':
+        case 'post':
             let sqlStr = 'SELECT * FROM thre'
             return await findFun(sqlStr).then(res=>{
                 return(res)
             })
-        case 'getData2':{
-            let sqlStr = 'SELECT * FROM ONE'
-            let d = sql.getData(sqlStr,(error:any, results:Record<string, any>[], fields:any)=>{
-                return results
-            })
-            return ` ${url} ${method}`
-        }
         default:
             return await getFile('./dist/index.html').then(res=>{
                 return res
             })
     }
+
 }
 
 exports.route = route

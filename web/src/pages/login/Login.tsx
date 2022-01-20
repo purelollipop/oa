@@ -10,6 +10,11 @@ const Login: React.FC<props> = (props) => {
       <button onClick={()=>{
         window.sessionStorage.setItem('token','123')
         window.sessionStorage.setItem('first','1')
+        fetch('api/login',{
+          method:'get'
+        }).then(res=>{
+          console.log(res)
+        })
        setTimeout(()=>{
          // window.location.reload()
          history.push('/')
