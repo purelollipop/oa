@@ -1,4 +1,3 @@
-import {fsReadFile} from "ts-loader/dist/utils";
 let sql = require('../sql/sql_line')
 import fs from 'fs'
 async function findFun(sqlStr:string){

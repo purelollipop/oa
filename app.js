@@ -5,7 +5,6 @@ let fs =  require('fs')
 import { readdir } from 'fs/promises';
 
 fs.readdir('./dist',(err,data)=>{
-    console.log(err)
     try {
         if( err ) {
             throw err
