@@ -10,8 +10,16 @@ const Login: React.FC<props> = (props) => {
       <button onClick={()=>{
         window.sessionStorage.setItem('token','123')
         window.sessionStorage.setItem('first','1')
+        let data = {name:'user',pas:'123456'}
         fetch('api/login',{
-          method:'get'
+          method:'post',
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify(data)
+        }).then(res=>{
+          res.json()
         }).then(res=>{
           console.log(res)
         })
