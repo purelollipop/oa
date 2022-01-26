@@ -26,7 +26,6 @@ export function patchRoutes({ routes }:any) {
         return res.json()
       }
     }).then((res) => {
-
       let first:string | null = window.sessionStorage.getItem('first')
       if(Number(first)){
         history.push('/')

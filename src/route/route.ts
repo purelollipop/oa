@@ -22,7 +22,7 @@ async function route(val:any):Promise<any>{
     }
     console.log(method)
     switch (method){
-        case 'get': {
+        case 'GET': {
             let sqlStr = 'SELECT * FROM ONE'
             return await findFun(sqlStr).then(res=>{
                 return(res)
