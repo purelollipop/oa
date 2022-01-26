@@ -23,6 +23,12 @@ async function route(val:any):Promise<any>{
     console.log(method)
     switch (method){
         case 'GET': {
+            let b = fs.access('./dist',(err)=>{
+                console.log(err)
+            })
+            let a = fs.statSync('./dist')
+            console.log(b)
+            console.log(a)
             let sqlStr = 'SELECT * FROM ONE'
             return await findFun(sqlStr).then(res=>{
                 return(res)
