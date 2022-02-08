@@ -23,7 +23,7 @@ function serve(route){
         let pathName = req.url
         const myUrl = new URL(pathName,'http://127.0.0.1:8082')
         const myUrlsearchParams = myUrl.searchParams
-        console.log(pathName)
+        // console.log(pathName)
         let postData = '';
         req.on('data',(chunk)=>{
             postData += chunk
@@ -32,24 +32,31 @@ function serve(route){
             var postObjc = querystring.parse(postData);
         })
 
-        if(pathName.indexOf('/api') === 0){
-            resolve.writeHead(200, {'Content-Type': 'application/json'});
-            route(req).then(res=>{
-                resolve.end(JSON.stringify(res))
-            })
-        } else {
-            if(pathName==='/'){
-                resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+        try {
+            if(pathName.indexOf('/api') === 0){
+                resolve.writeHead(200, {'Content-Type': 'application/json'});
                 route(req).then(res=>{
-                    resolve.end(res)
+                    resolve.end(JSON.stringify(res))
                 })
-            }else{
-                let d = path.extname(pathName)
-                d = mime.lookup(d)
-                resolve.writeHead(200, {'Content-Type': d});
-                let b = fs.readFileSync(`./dist${pathName}`)
-                resolve.end(b)
+            } else {
+                if(pathName==='/'|| pathName === '/login'){
+                    resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+                    route(req).then(res=>{
+                        resolve.end(res)
+                    })
+                }else{
+                    let d = path.extname(pathName)
+                    d = mime.lookup(d)
+                    resolve.writeHead(200, {'Content-Type': d});
+                    let b = fs.readFileSync(`./dist${pathName}`)
+                    resolve.end(b)
+                }
             }
+        }catch (err){
+            // resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+            // resolve.end(err)
+            console.log(err)
+            resolve.end('404')
         }
     }
     http.createServer(onRequest).listen(8082)

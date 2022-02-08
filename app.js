@@ -9,7 +9,6 @@ async function readFil(){
             // fs.mkdir('./dist',(err)=>{
             //     console.log(err)
             // })
-            console.log(res)
             for (let i = 0; i < res.length; i++) {
                 // let read = fs.createReadStream(`web/dist/${res[i]}`)
                 // let write = fs.createWriteStream(`./dist/${res[i]}`)
@@ -31,11 +30,8 @@ fs.readdir('./dist',(err,data)=>{
             // let b = fs.access('./dist',(err)=>{
             //     console.log(err)
             // })
-            // console.log(b)
             let a = fs.statSync('./dist')
-            // console.log(a)
             let aa = fs.statSync('./web/dist')
-            // console.log(aa)
             if(((a.ctime - aa.ctime)/1000)<0){
                 readFil().then(()=>{
                     serve.serve(route.route)
