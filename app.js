@@ -9,6 +9,7 @@ async function readFil(){
             // fs.mkdir('./dist',(err)=>{
             //     console.log(err)
             // })
+            console.log(res)
             for (let i = 0; i < res.length; i++) {
                 // let read = fs.createReadStream(`web/dist/${res[i]}`)
                 // let write = fs.createWriteStream(`./dist/${res[i]}`)
@@ -18,7 +19,7 @@ async function readFil(){
             let read = fs.createReadStream(`web/assets/favicon.ico`)
             let write = fs.createWriteStream(`./dist/favicon.ico`)
             read.pipe(write)
-            resolve()
+            resolve(123)
         })
     })
 }
@@ -31,17 +32,23 @@ fs.readdir('./dist',(err,data)=>{
             //     console.log(err)
             // })
             // console.log(b)
-            // let a = fs.statSync('./dist')
+            let a = fs.statSync('./dist')
             // console.log(a)
-            // let aa = fs.statSync('./web/dist')
+            let aa = fs.statSync('./web/dist')
             // console.log(aa)
-
-            readFil()
-            serve.serve(route.route)
+            if(((a.ctime - aa.ctime)/1000)<0){
+                readFil().then(()=>{
+                    serve.serve(route.route)
+                })
+            } else {
+                serve.serve(route.route)
+            }
         };
     } catch (err){
         // fs.writeFile()
-
+        fs.mkdir('./dist',(err)=>{
+            console.log(err)
+        })
         readFil().then(res=>{
             serve.serve(route.route)
         })

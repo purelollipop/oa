@@ -22,28 +22,26 @@ interface sqlInf{
 //     });
 // })
 
-let sql = mysql.createConnection({
+// let sql = mysql.createConnection({
+//     host     : 'localhost',
+//     port     : '3306',
+//     user     : 'admin',
+//     password : '123456',
+//     database : 'test'
+// })
+export let sql = mysql.createConnection({
     host     : 'localhost',
     port     : '3306',
-    user     : 'admin',
+    user     : 'root',
     password : '123456',
-    database : 'test'
+    database : 'oa'
 })
-function getData(sqlStr:string,fun:()=>any){
-    return new Promise((res:any,rej)=>{
-        sql.query(sqlStr,(error:any, results:Record<string, any>[], fields:any)=>{
-            res(results)
-        })
-    })
-}
-function getData2(sqlStr:string){
-    sql.query(sqlStr,(error:any, results:Record<string, any>[], fields:any)=>{
-        console.log(results)
-    })
-}
-module.exports = {
-    getData,
-    getData2
-}
-// db.query = sql.query
+
+
+module.exports = {sql}
+// module.exports = {
+//     getData,
+//     getData2
+// }
+// // db.query = sql.query
 // exports.sql = db
