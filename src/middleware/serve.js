@@ -3,6 +3,7 @@ import {log} from "nodemon/lib/utils";
 let http = require('http')
 let {URL} =  require('url')
 let fs =  require('fs')
+import { readFile  } from 'fs/promises';
 // let qs =  require('qs')
 let path =  require('path')
 var mime = require('mime-types')
@@ -11,9 +12,18 @@ import url,{ URL }  from 'url';
 let querystring = require('querystring');
 let getObj = require('../api/get/get_api.ts')
 const { Readable } = require('stream');
-
+async function getFile(urlStr){
+    return new Promise((resolve,reject)=>{
+        fs.readFile(urlStr,'utf-8',(err,data)=>{
+            if(err){
+                throw err
+            }
+            return resolve(data)
+        })
+    })
+}
 function serve(route){
-    function onRequest(req,resolve){
+    async function onRequest(req,resolve){
         // let readable = new Readable()
         // readable.setEncoding('utf-8')
         resolve.setHeader("Access-Control-Allow-Origin", "*");
@@ -39,11 +49,16 @@ function serve(route){
                     resolve.end(JSON.stringify(res))
                 })
             } else {
-                if(pathName==='/'|| pathName === '/login'){
+                console.log(pathName)
+                if(pathName==='/'){
                     resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
-                    route(req).then(res=>{
-                        resolve.end(res)
+                    let a = await readFile('./dist/index.html').then(res=>{
+                        return res
                     })
+                    resolve.end(a)
+                    // return getFile('./dist/index.html').then(res=>{
+                    //     return res
+                    // })
                 }else{
                     let d = path.extname(pathName)
                     d = mime.lookup(d)
