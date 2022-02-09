@@ -41,7 +41,6 @@ function serve(route){
         req.on('end', function () {
             var postObjc = querystring.parse(postData);
         })
-
         try {
             if(pathName.indexOf('/api') === 0){
                 resolve.writeHead(200, {'Content-Type': 'application/json'});
@@ -49,8 +48,7 @@ function serve(route){
                     resolve.end(JSON.stringify(res))
                 })
             } else {
-                console.log(pathName)
-                if(pathName==='/'){
+                if(pathName==='/' || pathName.indexOf('.')===-1){
                     resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
                     let a = await readFile('./dist/index.html').then(res=>{
                         return res

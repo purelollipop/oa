@@ -21,7 +21,7 @@ export function patchRoutes({ routes }:any) {
   ]
   routes[1].routes = extraRoutes
   if(token){
-    fetch('/api/get').then(res=>{
+    fetch('/api/getData').then(res=>{
       if(res.ok){
         return res.json()
       }

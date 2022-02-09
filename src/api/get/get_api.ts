@@ -12,9 +12,20 @@ const getObj = {
             })
         })
     },
-    getData2:function(sqlStr:string){
-        sql.query(sqlStr,(error:any, results:Record<string, any>[], fields:any)=>{
-            console.log(results)
+    getData2:async function(sqlStr:string){
+        return new Promise((res:any,reject)=>{
+            sql.query('SELECT * FROM ONE',(error:any, results:Record<string, any>[], fields:any)=>{
+                if(error) return reject(error)
+                res(results)
+            })
+        })
+    },
+    get:async function (sqlStr:string){
+        return new Promise((res:any,reject)=>{
+            sql.query('SELECT * FROM ONE',(error:any, results:Record<string, any>[], fields:any)=>{
+                if(error) return reject(error)
+                res(results)
+            })
         })
     }
 };
