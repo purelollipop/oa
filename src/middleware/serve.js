@@ -44,9 +44,10 @@ function serve(route){
         try {
             if(pathName.indexOf('/api') === 0){
                 resolve.writeHead(200, {'Content-Type': 'application/json'});
-                route(req).then(res=>{
-                    resolve.end(JSON.stringify(res))
+                let res = await route(req).then(res=>{
+                    return res
                 })
+                resolve.end(JSON.stringify(res))
             } else {
                 if(pathName==='/' || pathName.indexOf('.')===-1){
                     resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});

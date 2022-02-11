@@ -13,7 +13,6 @@ async function getFile(urlStr:string){
 }
 async function route(val:any):Promise<any>{
     let {url,method} = val
-    console.log(val)
     let arrUrl = url.split('/')
     url = arrUrl[arrUrl.length-1]
     if (url){
@@ -26,17 +25,19 @@ async function route(val:any):Promise<any>{
                 })
             }
             case 'POST':
-                let data:any = ''
-                val.on('data',(chunk:any)=>{
-                    data += chunk
-                })
-                val.on('end',()=>{
-                    querystring.parse(data)
-                    // console.log('data``',data)
-                    return getObj[url](data).then((res:any)=>{
-                        return res
-                    }).catch((err:any)=>{
-                        return err
+                return new Promise((resolve,reject)=>{
+                    let data:any = ''
+                    val.on('data',(chunk:any)=>{
+                        data += chunk
+                    })
+                    val.on('end',()=>{
+                        querystring.parse(data)
+                        data = JSON.parse(data)
+                        return getObj[url](data).then((res:any)=>{
+                            resolve(res)
+                        }).catch((err:any)=>{
+                            reject(err)
+                        })
                     })
                 })
             default:
