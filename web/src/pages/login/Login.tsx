@@ -1,26 +1,20 @@
 import React from 'react';
 import {history} from 'umi';
+import ajaxFun from "@/setting/proxy";
 
 interface props {}
 
 const Login: React.FC<props> = (props) => {
-  console.log('logo.tsx')
   return (
     <>
       <button onClick={()=>{
         window.sessionStorage.setItem('token','123')
         window.sessionStorage.setItem('first','1')
         let data = {name:'user',pas:'123456'}
-        fetch('api/login',{
-          method:'post',
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: JSON.stringify(data)
-        }).then(res=>{
-          res.json()
-        }).then(res=>{
+
+        ajaxFun('api/login','POST',data,{
+          'Content-Type': 'application/json'
+        }).then((res:Record<string, any>)=>{
           console.log(res)
         })
        setTimeout(()=>{

@@ -9,42 +9,6 @@ const Table: React.FC<props> = (props) => {
   return (<>
     <div>TableTableTable</div>
     <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-    <div>TableTableTable</div>
-
   </>);
 };
 

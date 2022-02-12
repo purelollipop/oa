@@ -33,12 +33,17 @@ export default class index extends React.Component<props, state> {
       collapsed: !this.state.collapsed,
     });
   };
+  goPageFUn:any = (data:string) => {
+    // console.log(data)
+    history.push(data)
+  }
   componentDidMount() {
     setTimeout(()=>{
       let a = [
         {
           name:'test',
-          to:'/test'
+          to:'/test',
+          icon:'<UserOutlined />'
         },
         {
           name:'table',
@@ -61,22 +66,31 @@ export default class index extends React.Component<props, state> {
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-              <Menu.Item key="1" icon={<UserOutlined />}>
-                nav 1
-              </Menu.Item>
-              <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-                nav 2
-              </Menu.Item>
-              <Menu.Item key="3" icon={<UploadOutlined />}>
-                nav 3
-                <Badge count={25}  size={"small"}/>
-              </Menu.Item>
-              <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-                <Menu.Item key="5">Option 5</Menu.Item>
-                <Menu.Item key="6">Option 6</Menu.Item>
-                <Menu.Item key="7">Option 7</Menu.Item>
-                <Menu.Item key="8">Option 8</Menu.Item>
-              </SubMenu>
+              {
+                this.state.routeData.map((ele,index)=>{
+                  return <Menu.Item key={index} onClick={()=>{
+                    this.goPageFUn(ele.to)
+                  }}>{ele.name}
+                  </Menu.Item>
+                })
+              }
+              {/*<Menu.Item key="1" icon={<UserOutlined />} onClick={()=>{*/}
+              {/*  this.goPageFUn('/test')*/}
+              {/*}}>nav 1*/}
+              {/*</Menu.Item>*/}
+              {/*<Menu.Item key="2" icon={<VideoCameraOutlined />}>*/}
+              {/*  nav 2*/}
+              {/*</Menu.Item>*/}
+              {/*<Menu.Item key="3" icon={<UploadOutlined />}>*/}
+              {/*  nav 3*/}
+              {/*  <Badge count={25}  size={"small"}/>*/}
+              {/*</Menu.Item>*/}
+              {/*<SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">*/}
+              {/*  <Menu.Item key="5">Option 5</Menu.Item>*/}
+              {/*  <Menu.Item key="6">Option 6</Menu.Item>*/}
+              {/*  <Menu.Item key="7">Option 7</Menu.Item>*/}
+              {/*  <Menu.Item key="8">Option 8</Menu.Item>*/}
+              {/*</SubMenu>*/}
             </Menu>
           </Sider>
           <Layout className="site-layout">
@@ -94,7 +108,7 @@ export default class index extends React.Component<props, state> {
                     })
                   }
                 </div>
-                <Button type="primary" size={"small"} onClick={()=>{
+                <Button style={{float: "right",top: "18px",right:"15px"}} type="primary" size={"small"} onClick={()=>{
                   window.sessionStorage.setItem('token','');
                   window.sessionStorage.setItem('first','1');
                   history.replace('/login')

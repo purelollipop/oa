@@ -1,4 +1,5 @@
 let {getObj} = require('../api/get/get_api')
+let {postObj} = require('../api/post/post_api')
 import fs from 'fs'
 let querystring = require('querystring');
 async function getFile(urlStr:string){
@@ -33,7 +34,7 @@ async function route(val:any):Promise<any>{
                     val.on('end',()=>{
                         querystring.parse(data)
                         data = JSON.parse(data)
-                        return getObj[url](data).then((res:any)=>{
+                        return postObj[url](data).then((res:any)=>{
                             resolve(res)
                         }).catch((err:any)=>{
                             reject(err)

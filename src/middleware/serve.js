@@ -34,30 +34,24 @@ function serve(route){
         const myUrl = new URL(pathName,'http://127.0.0.1:8082')
         const myUrlsearchParams = myUrl.searchParams
         // console.log(pathName)
-        let postData = '';
-        req.on('data',(chunk)=>{
-            postData += chunk
-        })
-        req.on('end', function () {
-            var postObjc = querystring.parse(postData);
-        })
         try {
             if(pathName.indexOf('/api') === 0){
                 resolve.writeHead(200, {'Content-Type': 'application/json'});
-                let res = await route(req).then(res=>{
+                let result = await route(req).then(res=>{
                     return res
+                }).catch(err=>{
+                    return err
                 })
-                resolve.end(JSON.stringify(res))
+                resolve.end(JSON.stringify(result))
             } else {
                 if(pathName==='/' || pathName.indexOf('.')===-1){
                     resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
-                    let a = await readFile('./dist/index.html').then(res=>{
+                    let result = await readFile('./dist/index.html').then(res=>{
                         return res
+                    }).catch(err=>{
+                        return err
                     })
-                    resolve.end(a)
-                    // return getFile('./dist/index.html').then(res=>{
-                    //     return res
-                    // })
+                    resolve.end(result)
                 }else{
                     let d = path.extname(pathName)
                     d = mime.lookup(d)
@@ -67,10 +61,10 @@ function serve(route){
                 }
             }
         }catch (err){
-            // resolve.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+            // resolve.writeHead(200, {'Content-Type': 'application/json'});
             // resolve.end(err)
             console.log(err)
-            resolve.end('404')
+            // resolve.end(err)
         }
     }
     http.createServer(onRequest).listen(8082)
