@@ -10,6 +10,7 @@ import {
   UploadOutlined,
   MailOutlined
 } from '@ant-design/icons';
+import * as Icon from '@ant-design/icons';
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
 interface state {
@@ -43,15 +44,17 @@ export default class index extends React.Component<props, state> {
         {
           name:'test',
           to:'/test',
-          icon:'<UserOutlined />'
+          icon:'UserOutlined'
         },
         {
           name:'table',
-          to:'/table'
+          to:'/table',
+          icon:'UserOutlined'
         },
         {
           name:'ShowMessage',
-          to:'/ShowMessage'
+          to:'/ShowMessage',
+          icon:'UserOutlined'
         }
       ]
       this.setState({
@@ -65,12 +68,15 @@ export default class index extends React.Component<props, state> {
         <Layout>
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={['0']}>
               {
                 this.state.routeData.map((ele,index)=>{
+                  // let ic = React.createElement(Icon[ele.icon])
+                  // console.log(ic)
                   return <Menu.Item key={index} onClick={()=>{
                     this.goPageFUn(ele.to)
-                  }}>{ele.name}
+                  }}>
+                    {ele.name}
                   </Menu.Item>
                 })
               }

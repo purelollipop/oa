@@ -23,9 +23,9 @@ const getObj = {
             })
         })
     },
-    getData2:async function(sqlStr:string){
+    bookList:async function(sqlStr:string){
         return new Promise((res:any,reject)=>{
-            sql.query('SELECT * FROM ONE',(error:any, results:Record<string, any>[], fields:any)=>{
+            sql.query('SELECT * FROM book',(error:any, results:Record<string, any>[], fields:any)=>{
                 if(error) return reject(error)
                 res(results)
             })
