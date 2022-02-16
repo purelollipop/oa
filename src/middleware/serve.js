@@ -32,15 +32,15 @@ function serve(route){
         resolve.setHeader("Access-Control-Allow-Headers","Content-Type, X-Requested-With, Cache-Control,Authorization");
         let pathName = req.url
         const myUrl = new URL(pathName,'http://127.0.0.1:8082')
-        const myUrlsearchParams = myUrl.searchParams
-        // console.log(pathName)
+        console.log(pathName)
         try {
             if(pathName.indexOf('/api') === 0){
                 resolve.writeHead(200, {'Content-Type': 'application/json'});
                 let result = await route(req).then(res=>{
+                    console.log(res)
                     return res
                 }).catch(err=>{
-                    return err
+                   return err
                 })
                 resolve.end(JSON.stringify(result))
             } else {
@@ -49,7 +49,7 @@ function serve(route){
                     let result = await readFile('./dist/index.html').then(res=>{
                         return res
                     }).catch(err=>{
-                        return err
+                        throw new(err)
                     })
                     resolve.end(result)
                 }else{
@@ -63,8 +63,8 @@ function serve(route){
         }catch (err){
             // resolve.writeHead(200, {'Content-Type': 'application/json'});
             // resolve.end(err)
-            console.log(err)
-            // resolve.end(err)
+            console.log(123,err)
+            resolve.end(err)
         }
     }
     http.createServer(onRequest).listen(8082)

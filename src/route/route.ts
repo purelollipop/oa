@@ -13,39 +13,69 @@ async function getFile(urlStr:string){
     })
 }
 async function route(val:any):Promise<any>{
-    let {url,method} = val
-    let arrUrl = url.split('/')
-    url = arrUrl[arrUrl.length-1]
-    if (url){
-        switch (method){
-            case 'GET': {
-                return getObj[url]().then((res:any)=>{
-                    return res
-                }).catch((err:any)=>{
-                    return err
-                })
-            }
-            case 'POST':
-                return new Promise((resolve,reject)=>{
-                    let data:any = ''
-                    val.on('data',(chunk:any)=>{
-                        data += chunk
+    try{
+        let {url,method} = val
+        let arrUrl = url.split('/')
+        url = arrUrl[arrUrl.length-1]
+        if (url){
+            switch (method){
+                case 'GET': {
+                    return getObj[url]().then((res:any)=>{
+                        return res
+                    }).catch((err:any)=>{
+                        return err
                     })
-                    val.on('end',()=>{
-                        querystring.parse(data)
-                        data = JSON.parse(data)
-                        return postObj[url](data).then((res:any)=>{
-                            resolve(res)
-                        }).catch((err:any)=>{
-                            reject(err)
+                }
+                case 'POST':
+                    return new Promise((resolve,reject)=>{
+                        let data:any = ''
+                        // if (val.headers["content-type"] === 'application/json;charset=UTF-8') {
+                        //     // data = []
+                        //     console.log('js')
+                        //     val.on('data',(chunk:any)=>{
+                        //         console.log(123)
+                        //         // console.log(chunk)
+                        //         data.push(chunk)
+                        //     })
+                        // } else {
+                        //
+                        // }
+                        val.on('data',(chunk:any)=>{
+                            data += chunk
+                        })
+                        val.on('end',()=>{
+                            querystring.parse(data)
+                            //Buffer.concat(buffers).toString();
+                            if (data) {
+                                try{
+                                    data = JSON.parse(data)
+                                    return postObj[url](data).then((res:any)=>{
+                                        resolve(res)
+                                    }).catch((err:any)=>{
+                                        reject(err)
+                                    })
+                                }catch (err){
+                                    reject({
+                                        code:0,
+                                        codeStr:`err${err}`
+                                    })
+                                }
+                            } else {
+                                resolve({
+                                    code:0,
+                                    codeStr:'no'
+                                })
+                            }
                         })
                     })
-                })
-            default:
-                return getFile('./dist/index.html').then(res=>{
-                    return res
-                })
+                default:
+                    return getFile('./dist/index.html').then(res=>{
+                        return res
+                    })
+            }
         }
+    }catch (err:any){
+        throw new Error(err)
     }
 }
 

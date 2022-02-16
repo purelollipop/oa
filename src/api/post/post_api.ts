@@ -23,6 +23,21 @@ const postObj = {
             })
         })
     },
+    addBook:async function(data:any):Promise<any>{
+        return new Promise((res:any,reject)=>{
+            sql.query(`SELECT * FROM user where username = '${data.name}'`,(error:any, results:Record<string, any>[], fields:any)=>{
+                if(error) {return reject(error)}
+                if(results.length){
+                    res(results)
+                }else{
+                    res({
+                        code:0,
+                        isLogin:false
+                    })
+                }
+            })
+        })
+    },
 };
 
 exports.postObj = postObj
