@@ -41,8 +41,6 @@ function serve(route){
                 }).catch(err=>{
                    return err
                 })
-                let resu = JSON.stringify(result)
-                console.log(resu)
                 resolve.end(JSON.stringify(result))
             } else {
                 if(pathName==='/' || pathName.indexOf('.')===-1){
