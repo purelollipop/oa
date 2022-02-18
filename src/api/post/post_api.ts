@@ -1,11 +1,11 @@
 import {sql} from '../../sql/sql_line'
-// let sql = require('../sql/sql_line')
 
-interface sqlType{
-    login:string
+interface results{
+    warningCount:number
+    // [k in string]?:any
 }
-let sqlStr:sqlType = {
-    login: 'SELECT * FROM user'
+type results2 = {
+    warningCount:number
 }
 const postObj = {
     login:async function(data:any):Promise<any>{
@@ -25,10 +25,13 @@ const postObj = {
     },
     addBook:async function(data:any):Promise<any>{
         return new Promise((res:any,reject)=>{
-            sql.query(`SELECT * FROM user where username = '${data.name}'`,(error:any, results:Record<string, any>[], fields:any)=>{
+            sql.query(`insert into book (bookName) values('${data.bookName}')`,(error:any, results:results, fields:any)=>{
                 if(error) {return reject(error)}
-                if(results.length){
-                    res(results)
+                if(!results.warningCount){
+                    res({
+                        code:1,
+                        codeMessage:'操作成功'
+                    })
                 }else{
                     res({
                         code:0,

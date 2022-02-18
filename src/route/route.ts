@@ -45,7 +45,6 @@ async function route(val:any):Promise<any>{
                         })
                         val.on('end',()=>{
                             querystring.parse(data)
-                            //Buffer.concat(buffers).toString();
                             if (data) {
                                 try{
                                     data = JSON.parse(data)
@@ -69,9 +68,10 @@ async function route(val:any):Promise<any>{
                         })
                     })
                 default:
-                    return getFile('./dist/index.html').then(res=>{
-                        return res
-                    })
+                    return {
+                        code:0,
+                        codeStr:'no methods'
+                    }
             }
         }
     }catch (err:any){

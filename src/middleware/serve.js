@@ -37,11 +37,12 @@ function serve(route){
             if(pathName.indexOf('/api') === 0){
                 resolve.writeHead(200, {'Content-Type': 'application/json'});
                 let result = await route(req).then(res=>{
-                    console.log(res)
                     return res
                 }).catch(err=>{
                    return err
                 })
+                let resu = JSON.stringify(result)
+                console.log(resu)
                 resolve.end(JSON.stringify(result))
             } else {
                 if(pathName==='/' || pathName.indexOf('.')===-1){
@@ -49,7 +50,7 @@ function serve(route){
                     let result = await readFile('./dist/index.html').then(res=>{
                         return res
                     }).catch(err=>{
-                        throw new(err)
+                        return err
                     })
                     resolve.end(result)
                 }else{
