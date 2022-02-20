@@ -35,11 +35,15 @@ function serve(route){
         console.log(pathName)
         try {
             if(pathName.indexOf('/api') === 0){
-                resolve.writeHead(200, {'Content-Type': 'application/json'});
                 let result = await route(req).then(res=>{
+                    resolve.writeHead(200, {'Content-Type': 'application/json'});
                     return res
                 }).catch(err=>{
-                   return err
+                    resolve.writeHead(200, {'Content-Type': 'text/plain'});
+                    return {
+                        code:0,
+                        errStr:JSON.stringify(err.message)
+                    }
                 })
                 resolve.end(JSON.stringify(result))
             } else {
@@ -62,7 +66,6 @@ function serve(route){
         }catch (err){
             // resolve.writeHead(200, {'Content-Type': 'application/json'});
             // resolve.end(err)
-            console.log(123,err)
             resolve.end(err)
         }
     }

@@ -35,7 +35,7 @@ export default class index extends React.Component<props, state> {
     });
   };
   goPageFUn:any = (data:string) => {
-    // console.log(data)
+    // console.log(data) 010714105613
     history.push(data)
   }
   componentDidMount() {

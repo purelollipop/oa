@@ -24,7 +24,8 @@ function ajaxFun(urlOrObj: httpObj | string,method?: methods,data?: any,option?:
   const token_type = window.sessionStorage.getItem('token_type')
   let url = "";
   let head: headOption = {
-    "Content-Type":'application/x-www-form-urlencoded',
+    // "Content-Type":'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     "Authorization":`${token_type} ${token}`
   }
   let initObj = {}

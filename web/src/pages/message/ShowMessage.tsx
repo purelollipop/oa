@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button, Input, Modal, Table} from "antd";
 
 interface state {
 }
@@ -14,7 +15,7 @@ export default class ShowMessage extends React.Component<props, state> {
 
   public render() {
     return (
-      <>ShowMessageShowMessageShowMessage</>
+      <></>
     )
   }
 }
