@@ -13,6 +13,7 @@ export function patchRoutes({ routes }:any) {
         { path: '/test', component: require('@/pages/test1/Test').default},
         { path: '/table', component: require('@/pages/table/Table').default},
         { path: '/ShowMessage', component: require('@/pages/message/index').default},
+        { path: '/', redirect: '/test'},
         {
           component: require('@/pages/404').default,
         },

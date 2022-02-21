@@ -75,6 +75,7 @@ async function route(val:any):Promise<any>{
             }
         }
     }catch (err:any){
+        console.log('route')
         throw new Error(err)
     }
 }

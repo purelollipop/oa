@@ -41,8 +41,8 @@ const TableComponent: React.FC<props> = (props) => {
       render: (text:string, record:Record<string,any>) => (
         <div>
           <Button size={"small"} onClick={borrowFun(record)}>借书</Button>
-          <Button size={"small"} type="primary">还书</Button>
-          <Button size={"small"} type="primary" danger>删除</Button>
+          <Button size={"small"} type="primary" onClick={resetBookFun(record)}>还书</Button>
+          <Button size={"small"} type="primary" onClick={deleteBookFun(record)} danger>删除</Button>
         </div>
       ),
     },
@@ -83,6 +83,7 @@ const TableComponent: React.FC<props> = (props) => {
   };
   /* 借书 */
   const borrowFun = function (data:any){
+    /*  借前清空数值 */
     return ()=>{
       setBorrowObj({
         borrowBookId:data.bookId,
@@ -97,7 +98,10 @@ const TableComponent: React.FC<props> = (props) => {
     }
     ajaxFun('api/borrowBook',
       'POST',
-      {bookId:borrowObj.borrowBookId,borrowName:borrowObj.borrowName}
+      {
+        bookId:borrowObj.borrowBookId,
+        borrowName:borrowObj.borrowName,
+      }
     ).then((res:Record<string, any>)=>{
       if(res.code){
         initFun()
@@ -110,11 +114,52 @@ const TableComponent: React.FC<props> = (props) => {
     })
   };
   const borrowWindowCancel = () => {
-    setBorrowObj({borrowBookId:null, borrowName:"",})
+    setBorrowObj({borrowBookId:null, borrowName:""})
     setborrowFlag(false);
   };
   /* 还书 */
+  const resetBookFun = (data:any)=>{
+    return ()=>{
+      ajaxFun('api/resetBook',
+        'POST',
+        {
+          bookId:data.bookId,
+          borrowNameId:data.borrowNameId,
+        }
+      ).then((res:Record<string, any>)=>{
+        if(res.code){
+          initFun()
+          borrowWindowCancel()
+          message.info('还书成功');
+          setborrowFlag(false);
+        }else{
+          message.info(res.codeMessage);
+        }
+      })
+    }
+  }
   /* 删除书 */
+  const deleteBookFun = (data:any)=>{
+    return ()=>{
+      ajaxFun('api/deleteBook',
+        'POST',
+        {
+          bookId:data.bookId,
+          borrowNameId:data.borrowNameId,
+        }
+      ).then((res:Record<string, any>)=>{
+        if(res.code){
+          initFun()
+          borrowWindowCancel()
+          message.info('操作成功');
+          setborrowFlag(false);
+        }else{
+          message.warning(res.codeMessage);
+        }
+      })
+    }
+  }
+
   useEffect(()=>{
     initFun()
   },[])
@@ -130,8 +175,10 @@ const TableComponent: React.FC<props> = (props) => {
         <div>
           学生号
           <Input value={borrowObj.borrowName} onChange={(event:any)=>{
-            let id = borrowObj.borrowBookId
-            setBorrowObj({borrowBookId:id,borrowName:event.target.value})
+            setBorrowObj({
+              borrowBookId:borrowObj.borrowBookId,
+              borrowName:event.target.value,
+            })
           }}/>
         </div>
       </Modal>

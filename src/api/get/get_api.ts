@@ -19,7 +19,7 @@ const getObj = {
                 }else{
                     res({
                         code:0,
-                        isLogin:false
+                        codeMessage:`操作失败`
                     })
                 }
             })

@@ -1,10 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import { Table, Tag, Space,Button  } from 'antd';
+import {Table, Tag, Space, Button, Input, Modal, message} from 'antd';
 import ajaxFun from "@/setting/proxy";
 interface props {}
-
+interface user{
+  user:string,
+  password:string
+}
 function Test () {
-  const [listData, setlistData] = useState<Record<string, any>[]>([]);
+  const [listData, setlistData] = useState<Record<string, any>[]>([])
+  const [addWindowFlag, setAddWindowFlag] = useState<boolean>(false)
+  const [addUser,setAddUser] = useState<user>({
+    user:"",
+    password:""
+  })
   const columns = [
     {
       title: 'Name',
@@ -16,10 +24,50 @@ function Test () {
       dataIndex: 'idcode',
     },
     {
-      title: 'class',
-      dataIndex: 'className',
+      title: '操作',
+      render:(text:string,record:any) =>
+        <>
+          <Button danger onClick={deleteFun(record)}>删除</Button>
+        </>,
     },
   ];
+  /* 新增 */
+  const addFun = ()=>{
+    setAddWindowFlag(true)
+  }
+  /* 删除 */
+  const deleteFun = (data:any)=>{
+    return ()=>{
+      ajaxFun('api/userList','POST').then((res:Record<string, any>[])=>{
+
+      })
+    }
+  }
+  /* 弹窗确定 同时用户*/
+  const addWindowOk = () => {
+    if(!addUser){
+      message.info('用户名不能为空');
+    }
+    ajaxFun('api/addUser','POST',{name:addUser.user,pass:addUser.password},{
+      'Content-Type': 'application/json'
+    }).then((res:Record<string, any>)=>{
+      if(res.code){
+        message.info('添加成功');
+        addWindowCancel()
+        initFun()
+      }else{
+        message.info('添加失败');
+      }
+    })
+  };
+  /* 关闭弹窗 同时新增用户*/
+  const addWindowCancel = () => {
+    setAddUser({
+      user:"",
+      password:""
+    })
+    setAddWindowFlag(false);
+  };
   function initFun(){
     ajaxFun('api/userList','GET').then((res:Record<string, any>[])=>{
       for (let i = 0; i < res.length; i++) {
@@ -33,7 +81,19 @@ function Test () {
   },[])
   return (
     <>
-      <Button size={"small"}>添加</Button>
+      <Modal title="新增用户" visible={addWindowFlag} onOk={addWindowOk} onCancel={addWindowCancel}>
+        <div>
+          用户名
+          <Input value={addUser.user} onChange={
+            (event:any)=>{setAddUser({user:event.target.value,password:addUser.password})}
+          }/>
+          密码
+          <Input value={addUser.password} onChange={
+            (event:any)=>{setAddUser({user:addUser.user,password:event.target.value})}
+          }/>
+        </div>
+      </Modal>
+      <Button size={"small"} onClick={addFun}>添加</Button>
       <Table columns={columns} dataSource={listData} />
     </>
   );

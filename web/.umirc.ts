@@ -12,7 +12,6 @@ export default defineConfig({
     {
       path: '/',
       component: '@/layouts/index',
-      // redirect:'/test',
       wrappers:['@/wrappers/auth'],
       routes:[
         // {
