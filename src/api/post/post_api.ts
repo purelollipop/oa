@@ -240,7 +240,10 @@ const postObj = {
                             }
                         }
                        let b:string = a.toString()
-                        sql.query(`update student set borrow="${b}" where studentId="${data.borrowNameId}"`)
+                        sql.query(`update student set borrow="${b}" where studentId="${data.borrowNameId}"`,(error:any, results:results|any[])=>{
+                            console.log(error)
+                            console.log(results)
+                        })
                         resolve (results)
                     }else{
                         stud = {
@@ -314,7 +317,7 @@ const postObj = {
                     })
                     return reject(error)
                 }
-                if(!results.warningCount){
+                if(results.affectedRows){
                     res({
                         code:1,
                         codeMessage:'操作成功'

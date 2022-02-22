@@ -6,7 +6,6 @@ interface props {}
 interface borrowObj {
   borrowBookId:number|null,
   borrowName:string,
-  bookName:string,
 }
 
 const TableComponent: React.FC<props> = (props) => {
@@ -21,7 +20,6 @@ const TableComponent: React.FC<props> = (props) => {
   const [borrowObj, setBorrowObj] = useState<borrowObj>({
     borrowBookId:null,
     borrowName:"",
-    bookName:"",
   });
 
   const columns = [
@@ -90,7 +88,6 @@ const TableComponent: React.FC<props> = (props) => {
       setBorrowObj({
         borrowBookId:data.bookId,
         borrowName:'',
-        bookName:'',
       })
       setborrowFlag(true)
     }
@@ -118,7 +115,7 @@ const TableComponent: React.FC<props> = (props) => {
     })
   };
   const borrowWindowCancel = () => {
-    setBorrowObj({borrowBookId:null, borrowName:"", bookName:'',})
+    setBorrowObj({borrowBookId:null, borrowName:"",})
     setborrowFlag(false);
   };
   /* 还书 */
@@ -128,8 +125,8 @@ const TableComponent: React.FC<props> = (props) => {
         'POST',
         {
           bookId:data.bookId,
-          bookName:borrowObj.bookName,
           borrowNameId:data.borrowNameId,
+          bookName:data.bookName,
         }
       ).then((res:Record<string, any>)=>{
         if(res.code){
@@ -183,7 +180,6 @@ const TableComponent: React.FC<props> = (props) => {
             setBorrowObj({
               borrowBookId:borrowObj.borrowBookId,
               borrowName:event.target.value,
-              bookName:borrowObj.bookName,
             })
           }}/>
         </div>

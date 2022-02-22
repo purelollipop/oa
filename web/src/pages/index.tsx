@@ -35,7 +35,7 @@ export default class index extends React.Component<props, state> {
     });
   };
   goPageFUn:any = (data:string) => {
-    // console.log(data) 010714105613
+    // console.log(data)
     history.push(data)
   }
   componentDidMount() {
@@ -106,14 +106,14 @@ export default class index extends React.Component<props, state> {
                   className: 'trigger',
                   onClick: this.toggle,
                 })}
-                <span >Page index head</span>
+                {/*<span >Page index head</span>
                 <div style={{display:'inline-block'}}>
                   {
                     this.state.routeData.map((ele)=>{
                       return <Link to={ele.to} key={ele.to}>{ele.name}</Link>
                     })
                   }
-                </div>
+                </div>*/}
                 <Button style={{float: "right",top: "18px",right:"15px"}} type="primary" size={"small"} onClick={()=>{
                   window.sessionStorage.setItem('token','');
                   window.sessionStorage.setItem('first','1');
