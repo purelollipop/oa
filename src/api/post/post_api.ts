@@ -1,10 +1,15 @@
 import {sql} from '../../sql/sql_line'
-const {createCipheriv,scrypt, randomFill} = require('crypto');
+const {createCipheriv,scrypt, randomFill, scryptSync,createCipher,
+    createDecipher,
+    createDecipheriv,} = require('crypto');
+const { Buffer } = require('buffer');
+
 interface results{
     warningCount:number
     changedRows:number
     message:string
     affectedRows:number
+    length:number
     // [k in string]?:any
 }
 
@@ -12,10 +17,45 @@ const postObj = {
     login:async function(data:any):Promise<any>{
         return new Promise((res:any,reject)=>{
             sql.query(
-                `SELECT * FROM user where username = '${data.name}'`,
+                `SELECT password FROM user where username = '${data.name}'`,
                 (error:any, results:Record<string, any>[], fields:any)=>{
                 if(error) {return reject(error)}
                 if(results.length){
+                    const decipherHash = createDecipher('aes-192-cbc', '123')
+                    let decrypted = decipherHash.update(results[0].password,'hex',"utf8");
+                    decrypted += decipherHash.final('utf8')
+                    if(data.pas === decrypted){
+                        res({
+                            code:1,
+                            codeMessage:`操作成功`
+                        })
+                    }
+                }else{
+                    res({
+                        code:0,
+                        codeMessage:`操作失败`
+                    })
+                }
+            })
+        })
+    },
+    addUser:async function(data:any):Promise<any>{
+        return new Promise((res:any,reject)=>{
+            const ciph = createCipher('aes-192-cbc', "123")
+            let ciphPass = ciph.update(data.pass,"utf8",'hex')
+            ciphPass += ciph.final('hex')
+            sql.query(
+                `insert into user(username,password)  values('${data.name}', '${ciphPass}')`,
+                (error:any, results:results, fields:any)=>{
+                if(error) {
+                    res({
+                        code:0,
+                        codeMessage:`操作失败${error}`
+                    })
+                    return
+                }
+                    console.log(results)
+                if(!results.warningCount){
                     res({
                         code:1,
                         codeMessage:`操作成功`
@@ -29,32 +69,20 @@ const postObj = {
             })
         })
     },
-    addUser:async function(data:any):Promise<any>{
+    deleteUser:async function(data:any):Promise<any>{
         return new Promise((res:any,reject)=>{
-            const algorithm = 'aes-192-cbc';
-            scrypt(data.pass, 'salt', 24, (err:any, key:any) => {
-                if (err) throw err;
-                // 然后，将生成随机的初始化向量
-                randomFill(new Uint8Array(16), (err:any, iv:any) => {
-                    if (err) throw err;
-                    // 一旦有了密钥和 iv，则可以创建和使用加密...
-                    const cipher = createCipheriv(algorithm, key, iv);
-
-                    let encrypted = '';
-                    cipher.setEncoding('hex');
-
-                    cipher.on('data', (chunk:any) => encrypted += chunk);
-                    cipher.on('end', () => console.log(encrypted));
-
-                    cipher.write('some clear text data');
-                    cipher.end();
-                });
-            });
             sql.query(
-                `insert into user(username,password)  values('${data.name}', password('${data.pass}'))`,
-                (error:any, results:Record<string, any>[], fields:any)=>{
-                if(error) {return reject(error)}
-                if(results.length){
+                `delete from user where id='${data.id}' and id<>1`,
+                (error:any, results:results, fields:any)=>{
+                if(error) {
+                    res({
+                        code:0,
+                        codeMessage:`操作失败${error}`
+                    })
+                    return
+                }
+                    console.log(results)
+                if(!results.warningCount && results.affectedRows){
                     res({
                         code:1,
                         codeMessage:`操作成功`
@@ -115,6 +143,7 @@ const postObj = {
     },
     borrowBook:async function(data:any):Promise<any>{
         return new Promise(async (res:any,rej)=>{
+            /* 查询学生是否存在 */
             let stud:any = await new Promise((resolve,reject)=>{
                 sql.query(
                     `select * from student where studentId="${data.borrowName}"`,
@@ -131,6 +160,7 @@ const postObj = {
                 })
             })
             let addResults:any = null
+            /* 当学存在 借书 */
             if(stud.length){
                 addResults = await new Promise((resolve,reject)=>{
                     sql.query(
@@ -158,16 +188,17 @@ const postObj = {
                     })
                 })
             }else{
-                res({
+                addResults = {
                     code:0,
                     codeMessage:'操作失败'
-                })
+                }
+                res(addResults)
             }
             // let studyBorrow:any = null
             if(addResults.code){
                 new Promise((resolve,reject)=>{
                     sql.query(
-                        `update student set borrow="${data.bookName}" 
+                        `update student set borrow=(select bookName from book where bookId="${data.bookId}") 
                          where studentId="${data.borrowName}"`,
                         (error:any, results:results, fields:any)=>{
                         if(error) {reject(error)}
@@ -196,19 +227,30 @@ const postObj = {
         return new Promise(async (res:any,rej)=>{
             /* 先获取人物是否存在 */
             let stud:any = await new Promise((resolve,reject)=>{
-                sql.query(`select * from student where studentId="${data.borrowNameId}"`,(error:any, results:results, fields:any)=>{
+                sql.query(`select borrow from student where exists(SELECT * FROM student 
+                           WHERE studentId="${data.borrowNameId}") and studentId="${data.borrowNameId}"`,
+                    (error:any, results:results|any[], fields:any)=>{
                     if(error) {reject(error)}
-                    if(!results.warningCount){
+                    if(results.length){
+                        let a:any[] = (results as any[])[0].borrow.split(',')
+                        for (let i = 0; i < a.length; i++) {
+                            if(data.bookName === a[i]){
+                                a.splice(i,1)
+                                break
+                            }
+                        }
+                       let b:string = a.toString()
+                        sql.query(`update student set borrow="${b}" where studentId="${data.borrowNameId}"`)
                         resolve (results)
                     }else{
-                        res({
+                        stud = {
                             code:0,
-                            codeMessage:`'操作失败'${results.message}`
-                        })
+                            codeMessage:`'操作失败'${(results as results).message}`
+                        }
+                        res(stud)
                     }
                 })
             })
-            console.log(stud)
             if(stud.length){
                 await new Promise((resolve,reject)=>{
                     sql.query(

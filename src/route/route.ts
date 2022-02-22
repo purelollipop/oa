@@ -2,16 +2,7 @@ let {getObj} = require('../api/get/get_api')
 let {postObj} = require('../api/post/post_api')
 import fs from 'fs'
 let querystring = require('querystring');
-async function getFile(urlStr:string){
-    return new Promise((resolve,reject)=>{
-        fs.readFile(urlStr,'utf-8',(err,data)=>{
-            if(err){
-                throw err
-            }
-            return resolve(data)
-        })
-    })
-}
+
 async function route(val:any):Promise<any>{
     try{
         let {url,method} = val

@@ -27,10 +27,10 @@ const index: React.FC<props> = (props) => {
       title: '学籍号',
       dataIndex: 'studentId',
     },
-    // {
-    //   title: '借的书',
-    //   dataIndex: 'borrow',
-    // },
+    {
+      title: '借的书',
+      dataIndex: 'borrow',
+    },
     {
       title: 'Action',
       render: (text:string, record:Record<string,any>) => (

@@ -21,7 +21,7 @@ function Test () {
     },
     {
       title: 'licenses',
-      dataIndex: 'idcode',
+      dataIndex: 'id',
     },
     {
       title: '操作',
@@ -38,8 +38,15 @@ function Test () {
   /* 删除 */
   const deleteFun = (data:any)=>{
     return ()=>{
-      ajaxFun('api/userList','POST').then((res:Record<string, any>[])=>{
-
+      ajaxFun('api/deleteUser','POST',{
+        id:data.id
+      }).then((res:Record<string, any>)=>{
+       if(res.code){
+         message.success('操作成功')
+         initFun()
+       }else{
+         message.success(`操作失败${res.codeMessage}`)
+       }
       })
     }
   }
