@@ -29,6 +29,11 @@ const postObj = {
                             code:1,
                             codeMessage:`操作成功`
                         })
+                    }else{
+                        res({
+                            code:0,
+                            codeMessage:`操作失败`
+                        })
                     }
                 }else{
                     res({
