@@ -67,7 +67,7 @@ function Test () {
       }
     })
   };
-  /* 关闭弹窗 同时新增用户*/
+  /* 关闭弹窗 同时清空输入框数据*/
   const addWindowCancel = () => {
     setAddUser({
       user:"",

@@ -86,7 +86,6 @@ const postObj = {
                     })
                     return
                 }
-                    console.log(results)
                 if(!results.warningCount && results.affectedRows){
                     res({
                         code:1,

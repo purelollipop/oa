@@ -1,6 +1,5 @@
 import { message } from 'antd';
 let base = ''
-console.log(process.env.NODE_ENV)
 if(process.env.NODE_ENV === "development"){
   base = "http://localhost:8082/"
 }
@@ -24,8 +23,8 @@ function ajaxFun(urlOrObj: httpObj | string,method?: methods,data?: any,option?:
   const token_type = window.sessionStorage.getItem('token_type')
   let url = "";
   let head: headOption = {
-    // "Content-Type":'application/x-www-form-urlencoded',
-    'Content-Type': 'application/json',
+    "Content-Type":'application/x-www-form-urlencoded',
+    // 'Content-Type': 'application/json',
     "Authorization":`${token_type} ${token}`
   }
   let initObj = {}
@@ -35,7 +34,6 @@ function ajaxFun(urlOrObj: httpObj | string,method?: methods,data?: any,option?:
       head.Authorization = `${token_type} ${token}`
     }
     url = `${base}${urlOrObj}`;
-    console.log(method)
     if(method === 'get'){
       if(typeof data === 'object'){
         Object.keys(data).map((ele,val)=>{

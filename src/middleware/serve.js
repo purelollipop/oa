@@ -1,38 +1,20 @@
-import {log} from "nodemon/lib/utils";
-
 let http = require('http')
 let {URL} =  require('url')
 let fs =  require('fs')
 import { readFile  } from 'fs/promises';
-// let qs =  require('qs')
 let path =  require('path')
-var mime = require('mime-types')
-// let url =  require('url')
+let mime = require('mime-types')
 import url,{ URL }  from 'url';
-let querystring = require('querystring');
-let getObj = require('../api/get/get_api.ts')
-const { Readable } = require('stream');
-async function getFile(urlStr){
-    return new Promise((resolve,reject)=>{
-        fs.readFile(urlStr,'utf-8',(err,data)=>{
-            if(err){
-                throw err
-            }
-            return resolve(data)
-        })
-    })
-}
+
+
+
 function serve(route){
     async function onRequest(req,resolve){
-        // let readable = new Readable()
-        // readable.setEncoding('utf-8')
         resolve.setHeader("Access-Control-Allow-Origin", "*");
         resolve.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
         resolve.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
         resolve.setHeader("Access-Control-Allow-Headers","Content-Type, X-Requested-With, Cache-Control,Authorization");
         let pathName = req.url
-        const myUrl = new URL(pathName,'http://127.0.0.1:8082')
-        console.log(pathName)
         try {
             if(pathName.indexOf('/api') === 0){
                 let result = await route(req).then(res=>{

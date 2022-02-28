@@ -1,11 +1,9 @@
 import { history } from 'umi';
 import React from 'React';
-console.log('app.tsx')
 let extraRoutes:Record<string, any>[] = [];
 export function patchRoutes({ routes }:any) {
-  console.log('patchRoute')
-  let token = window.sessionStorage.getItem('token')
-  let href = window.location.href.split('/')
+  // let token = window.sessionStorage.getItem('token')
+  // let href = window.location.href.split('/')
   extraRoutes = [
     {
       component: require('@/pages/index').default,
@@ -20,8 +18,8 @@ export function patchRoutes({ routes }:any) {
       ]
     },
   ]
-  routes[1].routes = extraRoutes
-  if(token){
+  // routes[1].routes = extraRoutes
+ /* if(token){
     fetch('/api/getData').then(res=>{
       if(res.ok){
         return res.json()
@@ -37,7 +35,7 @@ export function patchRoutes({ routes }:any) {
     }).catch(err=>{
       console.log(err)
     })
-  }
+  }*/
 }
 export function render(oldRender:any) {
   console.log('render')
