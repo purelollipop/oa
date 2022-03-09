@@ -20,6 +20,7 @@ export default defineConfig({
             { path: '/test', component: '@/pages/test1/Test', wrappers:['@/wrappers/auth'] },
             { path: '/table', component: '@/pages/table/Table', wrappers:['@/wrappers/auth']  },
             { path: '/ShowMessage', component: '@/pages/message/index',wrappers:['@/wrappers/auth']},
+            { path: '/setting', component: '@/pages/setting/setting',wrappers:['@/wrappers/auth']},
             {component: '@/pages/404',},
           ]
         },

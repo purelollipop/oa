@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{CSSProperties } from 'react';
 import "./index.less";
 import {Link,history} from "umi";
 import { Layout, Menu, Badge, Button } from 'antd';
@@ -11,6 +11,7 @@ import {
 import * as Icon from '@ant-design/icons';
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
+
 interface state {
   routeData:Record<string, any>[],
   headScrollData:Record<string, any>[],
@@ -26,7 +27,10 @@ export default class index extends React.Component<props, state> {
     this.state = {
       routeData:[],
       headScrollData:[],
-      collapsed: false
+      collapsed: false,
+      leftMove:false,
+      rightMove:false,
+      res:[]
     }
   }
   toggle  = ():void => {
@@ -42,10 +46,48 @@ export default class index extends React.Component<props, state> {
     window.sessionStorage.setItem('first','1');
     history.replace('/login')
   }
-  leftMove = ():void => {
-    let scrollDiv = document.getElementsByClassName('scrollDiv')[0]
-    console.log(scrollDiv)
+  leftMoveFun = (flag:number) => {
+    return ()=>{
+      this.leftMoveC3(flag)
+      this.setState({
+        leftMove:true
+      },()=>{
+        let a = setInterval(()=>{
+          if(this.state.leftMove){
+            this.leftMoveC3(flag)
+          }else{
+            clearInterval(a)
+          }
+        },100)
+      })
+    }
   }
+  breakLeftMoveFun = ():void => {
+    this.setState({
+      leftMove:false
+    })
+  }
+  leftMoveC3 = (flag:number):void => {
+    let scrollDiv = document.getElementsByClassName('scrollDiv') as HTMLCollectionOf<HTMLElement>
+    let scrollDiv2 = document.querySelector('.scrollCla>:nth-child(2)') as HTMLElement
+    let offLe:any = scrollDiv[0].offsetLeft
+    // console.log(scrollDiv[0].offsetWidth)
+    // console.log(scrollDiv2.offsetWidth)
+    // console.log(scrollDiv[0].offsetWidth - scrollDiv2.offsetWidth)
+    // console.log(Math.abs(offLe))
+    if (flag){
+      offLe -= 50
+    } else {
+      offLe += 50
+    }
+    if(offLe>=50){
+      offLe = 0
+    } else if((scrollDiv[0].offsetWidth - scrollDiv2.offsetWidth) < (Math.abs(offLe)-30)) {
+      offLe = -(scrollDiv[0].offsetWidth - scrollDiv2.offsetWidth)
+    }
+    scrollDiv[0].style.left = `${offLe}px`
+  }
+
   componentDidMount() {
     setTimeout(()=>{
       let a = [
@@ -63,15 +105,19 @@ export default class index extends React.Component<props, state> {
           name:'ShowMessage',
           to:'/ShowMessage',
           icon:'UploadOutlined'
+        },
+        {
+          name:'setting',
+          to:'/setting',
+          icon:'UploadOutlined'
         }
       ]
       let b = [...a]
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 10; i++) {
         let aa = JSON.parse(JSON.stringify(a[0]));
         aa.to = `aa.to${i}`
         b.push(aa)
       }
-
       this.setState({
         routeData : a
       })
@@ -79,6 +125,10 @@ export default class index extends React.Component<props, state> {
         headScrollData:b
       })
     },100)
+    // let leftScrollCla = document.getElementsByClassName('leftScrollCla') as HTMLCollectionOf<HTMLElement>
+    // leftScrollCla[0].addEventListener('mousedown',()=>{
+    //
+    // })
   }
   public render() {
     return (
@@ -125,7 +175,7 @@ export default class index extends React.Component<props, state> {
                 </div>
                 <div>
                   <div className="scrollCla">
-                    <div onClick={this.leftMove}><CaretLeftOutlined /></div>
+                    <div className="leftScrollCla" onMouseDown={this.leftMoveFun(1)} onMouseUp={this.breakLeftMoveFun}><CaretLeftOutlined /></div>
                     <div>
                       <div className="scrollDiv">
                         {
@@ -139,7 +189,7 @@ export default class index extends React.Component<props, state> {
                         }
                       </div>
                     </div>
-                    <div><CaretRightOutlined /></div>
+                    <div onMouseDown={this.leftMoveFun(0)} onMouseUp={this.breakLeftMoveFun}><CaretRightOutlined /></div>
                   </div>
                 </div>
                 <Button type="primary" size={"small"} onClick={this.exiteFun}>退出</Button>
